@@ -1,0 +1,344 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    overflow: hidden;
+    color: #fff;
+}
+
+#canvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* 加载动画 */
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+#loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    text-align: center;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #00d4ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loader p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+}
+
+/* 顶部信息 */
+#info {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 300px;
+}
+
+#info h1 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+#info p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 15px;
+}
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.dot.sunny { background: #ffd700; box-shadow: 0 0 10px #ffd700; }
+.dot.cloudy { background: #a0a0a0; box-shadow: 0 0 10px #a0a0a0; }
+.dot.rainy { background: #00d4ff; box-shadow: 0 0 10px #00d4ff; }
+.dot.snowy { background: #ffffff; box-shadow: 0 0 10px #ffffff; }
+
+/* 天气面板 */
+#weather-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    z-index: 100;
+    transform: translateX(360px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#weather-panel.show {
+    transform: translateX(0);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+#close-panel {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+#close-panel:hover {
+    color: #fff;
+}
+
+.weather-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.temp {
+    font-size: 56px;
+    font-weight: 300;
+    background: linear-gradient(180deg, #fff 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+}
+
+.condition {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 10px 0;
+}
+
+.details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail {
+    text-align: center;
+}
+
+.detail .label {
+    display: block;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 5px;
+}
+
+.detail span:last-child {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.forecast {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.forecast-day {
+    text-align: center;
+    padding: 10px 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.forecast-day .day {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 5px;
+}
+
+.forecast-day .icon {
+    font-size: 20px;
+    margin: 5px 0;
+}
+
+.forecast-day .temp-range {
+    font-size: 11px;
+}
+
+/* 控制按钮 */
+#controls {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 10px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#controls button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#controls button:hover {
+    background: rgba(0, 212, 255, 0.3);
+    transform: scale(1.1);
+}
+
+#controls button.active {
+    background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+}
+
+/* 提示框 */
+#tooltip {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 200;
+    font-size: 14px;
+    max-width: 200px;
+}
+
+#tooltip.show {
+    opacity: 1;
+}
+
+#tooltip .city-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #00d4ff;
+}
+
+#tooltip .weather-brief {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    #info {
+        top: 10px;
+        left: 10px;
+        padding: 15px;
+        max-width: 250px;
+    }
+
+    #info h1 {
+        font-size: 16px;
+    }
+
+    #weather-panel {
+        top: auto;
+        bottom: 100px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        transform: translateY(400px);
+    }
+
+    #weather-panel.show {
+        transform: translateY(0);
+    }
+
+    .temp {
+        font-size: 42px;
+    }
+}

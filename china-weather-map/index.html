@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌤️ 中国实时天气 3D 地图</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div id="loading">
+        <div class="loader">
+            <div class="spinner"></div>
+            <p>正在加载 3D 地图...</p>
+        </div>
+    </div>
+
+    <div id="info">
+        <h1>🌤️ 中国实时天气地图</h1>
+        <p>悬停查看城市天气 | 点击聚焦城市</p>
+        <div class="legend">
+            <div class="legend-item"><span class="dot sunny"></span>☀️ 晴朗</div>
+            <div class="legend-item"><span class="dot cloudy"></span>☁️ 多云</div>
+            <div class="legend-item"><span class="dot rainy"></span>🌧️ 雨天</div>
+            <div class="legend-item"><span class="dot snowy"></span>❄️ 雪天</div>
+        </div>
+    </div>
+
+    <div id="weather-panel" class="hidden">
+        <div class="panel-header">
+            <h2 id="city-name">城市</h2>
+            <button id="close-panel">&times;</button>
+        </div>
+        <div class="weather-info">
+            <div class="temp" id="temp">--°C</div>
+            <div class="condition" id="condition">--</div>
+            <div class="details">
+                <div class="detail">
+                    <span class="label">💧 湿度</span>
+                    <span id="humidity">--%</span>
+                </div>
+                <div class="detail">
+                    <span class="label">💨 风速</span>
+                    <span id="wind">-- km/h</span>
+                </div>
+                <div class="detail">
+                    <span class="label">👁️ 能见度</span>
+                    <span id="visibility">-- km</span>
+                </div>
+            </div>
+        </div>
+        <div class="forecast" id="forecast">
+            <!-- 预报数据 -->
+        </div>
+    </div>
+
+    <div id="controls">
+        <button id="reset-view" title="重置视角">🎯</button>
+        <button id="toggle-rotate" title="自动旋转">🔄</button>
+        <button id="toggle-particles" title="切换粒子效果">✨</button>
+    </div>
+
+    <div id="tooltip"></div>
+    <canvas id="canvas"></canvas>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
