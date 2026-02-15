@@ -1,43 +1,68 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// 中国主要城市数据（坐标已调整为适合 3D 展示的位置）
+// 中国主要城市数据（坐标已调整为适合 3D 展示的位置，包含台湾）
 const CITIES = [
-    { name: '北京', lat: 39.9042, lon: 116.4074, x: 0.3, y: 0.8, z: 0 },
-    { name: '上海', lat: 31.2304, lon: 121.4737, x: 0.8, y: 0.2, z: 0.1 },
-    { name: '广州', lat: 23.1291, lon: 113.2644, x: 0.5, y: -0.6, z: 0.1 },
-    { name: '深圳', lat: 22.5431, lon: 114.0579, x: 0.55, y: -0.65, z: 0.1 },
-    { name: '成都', lat: 30.5728, lon: 104.0668, x: -0.1, y: 0.1, z: 0 },
-    { name: '杭州', lat: 30.2741, lon: 120.1551, x: 0.75, y: 0.15, z: 0.1 },
-    { name: '武汉', lat: 30.5928, lon: 114.3055, x: 0.5, y: 0.1, z: 0.05 },
-    { name: '西安', lat: 34.3416, lon: 108.9398, x: 0, y: 0.4, z: 0 },
-    { name: '重庆', lat: 29.5630, lon: 106.5516, x: 0, y: 0, z: 0.1 },
-    { name: '南京', lat: 32.0603, lon: 118.7969, x: 0.7, y: 0.25, z: 0.1 },
-    { name: '天津', lat: 39.0842, lon: 117.2009, x: 0.4, y: 0.75, z: 0 },
-    { name: '苏州', lat: 31.2989, lon: 120.5853, x: 0.78, y: 0.18, z: 0.1 },
-    { name: '郑州', lat: 34.7659, lon: 113.6841, x: 0.35, y: 0.45, z: 0 },
-    { name: '长沙', lat: 28.2280, lon: 112.9388, x: 0.45, y: -0.1, z: 0.05 },
-    { name: '沈阳', lat: 41.8057, lon: 123.4315, x: 0.9, y: 1.0, z: 0 },
-    { name: '青岛', lat: 36.0671, lon: 120.3826, x: 0.75, y: 0.55, z: 0.2 },
-    { name: '大连', lat: 38.9140, lon: 121.6147, x: 0.85, y: 0.7, z: 0.3 },
-    { name: '厦门', lat: 24.4798, lon: 118.0894, x: 0.65, y: -0.35, z: 0.15 },
-    { name: '昆明', lat: 25.0389, lon: 102.7183, x: -0.25, y: -0.4, z: 0 },
-    { name: '哈尔滨', lat: 45.8038, lon: 126.5350, x: 1.0, y: 1.3, z: 0 },
-    { name: '乌鲁木齐', lat: 43.8256, lon: 87.6168, x: -0.8, y: 0.9, z: 0 },
-    { name: '拉萨', lat: 29.6500, lon: 91.1000, x: -0.5, y: 0.1, z: 0.3 },
-    { name: '海口', lat: 20.0174, lon: 110.3492, x: 0.35, y: -0.85, z: 0.1 },
-    { name: '南宁', lat: 22.8170, lon: 108.3665, x: 0.2, y: -0.55, z: 0.05 },
-    { name: '兰州', lat: 36.0611, lon: 103.8343, x: -0.15, y: 0.5, z: 0 },
-    { name: '太原', lat: 37.8706, lon: 112.5489, x: 0.25, y: 0.55, z: 0 },
-    { name: '石家庄', lat: 38.0428, lon: 114.5149, x: 0.3, y: 0.65, z: 0 },
-    { name: '济南', lat: 36.6512, lon: 117.1201, x: 0.55, y: 0.55, z: 0.1 },
-    { name: '合肥', lat: 31.8206, lon: 117.2272, x: 0.6, y: 0.3, z: 0.05 },
-    { name: '南昌', lat: 28.6820, lon: 115.8579, x: 0.6, y: -0.05, z: 0.05 },
-    { name: '福州', lat: 26.0745, lon: 119.2965, x: 0.75, y: -0.2, z: 0.15 },
-    { name: '贵阳', lat: 26.6470, lon: 106.6302, x: 0.05, y: -0.25, z: 0 },
-    { name: '银川', lat: 38.4872, lon: 106.2309, x: -0.05, y: 0.7, z: 0 },
-    { name: '西宁', lat: 36.6171, lon: 101.7782, x: -0.25, y: 0.55, z: 0 },
-    { name: '呼和浩特', lat: 40.8414, lon: 111.7519, x: 0.4, y: 0.9, z: 0 }
+    // 直辖市
+    { name: '北京', lat: 39.9042, lon: 116.4074, x: 0.32, y: 0.75, z: 0 },
+    { name: '上海', lat: 31.2304, lon: 121.4737, x: 0.82, y: 0.12, z: 0.1 },
+    { name: '天津', lat: 39.0842, lon: 117.2009, x: 0.42, y: 0.68, z: 0 },
+    { name: '重庆', lat: 29.5630, lon: 106.5516, x: 0.05, y: -0.05, z: 0.1 },
+    
+    // 省会及主要城市 - 东北
+    { name: '哈尔滨', lat: 45.8038, lon: 126.5350, x: 1.05, y: 1.25, z: 0 },
+    { name: '沈阳', lat: 41.8057, lon: 123.4315, x: 0.92, y: 0.92, z: 0 },
+    { name: '大连', lat: 38.9140, lon: 121.6147, x: 0.88, y: 0.68, z: 0.3 },
+    { name: '长春', lat: 43.8171, lon: 125.3235, x: 1.0, y: 1.08, z: 0 },
+    
+    // 华北
+    { name: '石家庄', lat: 38.0428, lon: 114.5149, x: 0.32, y: 0.58, z: 0 },
+    { name: '太原', lat: 37.8706, lon: 112.5489, x: 0.28, y: 0.48, z: 0 },
+    { name: '济南', lat: 36.6512, lon: 117.1201, x: 0.58, y: 0.48, z: 0.1 },
+    { name: '青岛', lat: 36.0671, lon: 120.3826, x: 0.78, y: 0.45, z: 0.2 },
+    { name: '郑州', lat: 34.7659, lon: 113.6841, x: 0.38, y: 0.38, z: 0 },
+    
+    // 华东
+    { name: '南京', lat: 32.0603, lon: 118.7969, x: 0.72, y: 0.22, z: 0.1 },
+    { name: '杭州', lat: 30.2741, lon: 120.1551, x: 0.78, y: 0.08, z: 0.1 },
+    { name: '苏州', lat: 31.2989, lon: 120.5853, x: 0.8, y: 0.15, z: 0.1 },
+    { name: '合肥', lat: 31.8206, lon: 117.2272, x: 0.62, y: 0.25, z: 0.05 },
+    { name: '南昌', lat: 28.6820, lon: 115.8579, x: 0.62, y: -0.08, z: 0.05 },
+    { name: '福州', lat: 26.0745, lon: 119.2965, x: 0.75, y: -0.22, z: 0.15 },
+    { name: '厦门', lat: 24.4798, lon: 118.0894, x: 0.68, y: -0.32, z: 0.15 },
+    
+    // 台湾
+    { name: '台北', lat: 25.0330, lon: 121.5654, x: 0.9, y: -0.15, z: 0.1 },
+    { name: '高雄', lat: 22.6273, lon: 120.3014, x: 0.9, y: -0.22, z: 0.1 },
+    
+    // 华中
+    { name: '武汉', lat: 30.5928, lon: 114.3055, x: 0.52, y: 0.05, z: 0.05 },
+    { name: '长沙', lat: 28.2280, lon: 112.9388, x: 0.48, y: -0.15, z: 0.05 },
+    
+    // 华南
+    { name: '广州', lat: 23.1291, lon: 113.2644, x: 0.55, y: -0.55, z: 0.1 },
+    { name: '深圳', lat: 22.5431, lon: 114.0579, x: 0.6, y: -0.6, z: 0.1 },
+    { name: '南宁', lat: 22.8170, lon: 108.3665, x: 0.25, y: -0.55, z: 0.05 },
+    
+    // 海南
+    { name: '海口', lat: 20.0174, lon: 110.3492, x: 0.42, y: -0.75, z: 0.1 },
+    { name: '三亚', lat: 18.2528, lon: 109.5120, x: 0.4, y: -0.82, z: 0.1 },
+    
+    // 西南
+    { name: '成都', lat: 30.5728, lon: 104.0668, x: -0.05, y: 0.05, z: 0 },
+    { name: '贵阳', lat: 26.6470, lon: 106.6302, x: 0.08, y: -0.3, z: 0 },
+    { name: '昆明', lat: 25.0389, lon: 102.7183, x: -0.2, y: -0.42, z: 0 },
+    { name: '拉萨', lat: 29.6500, lon: 91.1000, x: -0.55, y: -0.05, z: 0.3 },
+    
+    // 西北
+    { name: '西安', lat: 34.3416, lon: 108.9398, x: 0.05, y: 0.35, z: 0 },
+    { name: '兰州', lat: 36.0611, lon: 103.8343, x: -0.12, y: 0.45, z: 0 },
+    { name: '西宁', lat: 36.6171, lon: 101.7782, x: -0.22, y: 0.48, z: 0 },
+    { name: '银川', lat: 38.4872, lon: 106.2309, x: -0.02, y: 0.65, z: 0 },
+    { name: '乌鲁木齐', lat: 43.8256, lon: 87.6168, x: -0.78, y: 0.85, z: 0 },
+    
+    // 内蒙古
+    { name: '呼和浩特', lat: 40.8414, lon: 111.7519, x: 0.42, y: 0.82, z: 0 }
 ];
 
 // WMO 天气代码映射
@@ -176,62 +201,171 @@ class WeatherMap {
     }
 
     createChinaMap() {
-        // 简化的中国地图轮廓点（基于真实地理形状简化）
-        const chinaOutline = [
-            // 东北部
-            [1.1, 1.3], [1.0, 1.2], [0.95, 1.1], [0.9, 1.0],
-            // 东部沿海
-            [0.85, 0.7], [0.8, 0.5], [0.78, 0.3], [0.75, 0.15], [0.7, 0.0], [0.65, -0.2],
-            // 东南部
-            [0.6, -0.35], [0.55, -0.5], [0.5, -0.65], [0.45, -0.75],
-            // 南部
-            [0.35, -0.85], [0.25, -0.8], [0.15, -0.7], [0.1, -0.6],
-            // 西南部
-            [0.0, -0.5], [-0.15, -0.4], [-0.25, -0.35], [-0.35, -0.25],
-            // 西部
-            [-0.5, -0.15], [-0.65, 0.0], [-0.75, 0.15], [-0.8, 0.3],
-            // 西北部
-            [-0.85, 0.5], [-0.8, 0.7], [-0.7, 0.85], [-0.5, 0.95],
-            // 北部
-            [-0.3, 1.0], [-0.1, 1.1], [0.1, 1.2], [0.3, 1.25],
-            // 回到起点
-            [0.5, 1.28], [0.8, 1.3], [1.0, 1.35]
+        // 中国大陆 - 雄鸡形状轮廓（包含主要地理特征）
+        const mainlandOutline = [
+            // 东北（鸡头）- 从黑龙江开始
+            [1.2, 1.35],      // 黑龙江最北
+            [1.15, 1.25],
+            [1.1, 1.15],      // 鸡冠位置
+            [1.05, 1.0],
+            [1.0, 0.85],      // 吉林附近
+            [0.95, 0.75],
+            // 东部沿海（鸡胸）
+            [0.9, 0.6],       // 辽宁南部
+            [0.85, 0.5],      // 渤海湾
+            [0.8, 0.45],      // 山东半岛
+            [0.75, 0.35],
+            [0.78, 0.25],     // 江苏沿海
+            [0.8, 0.15],
+            [0.82, 0.05],     // 上海/浙江
+            [0.8, -0.05],
+            [0.75, -0.15],    // 福建
+            [0.7, -0.25],
+            [0.68, -0.35],    // 广东东部/潮汕
+            // 南部（鸡腿）- 雷州半岛
+            [0.6, -0.55],
+            [0.55, -0.65],    // 雷州半岛
+            [0.5, -0.7],
+            [0.45, -0.68],    // 海南海峡
+            [0.4, -0.65],
+            [0.35, -0.6],     // 广西沿海
+            [0.3, -0.55],
+            [0.25, -0.5],     // 北部湾
+            // 西南（鸡尾）
+            [0.15, -0.45],
+            [0.05, -0.4],     // 云南南部
+            [-0.05, -0.35],
+            [-0.15, -0.3],    // 云南
+            [-0.25, -0.25],
+            [-0.35, -0.2],    // 中缅边境
+            // 西部（鸡腹）
+            [-0.5, -0.1],
+            [-0.65, 0.0],     // 西藏南部
+            [-0.75, 0.1],
+            [-0.85, 0.2],     // 西藏西部
+            [-0.9, 0.35],
+            [-0.85, 0.5],     // 新疆西南部
+            // 西北
+            [-0.75, 0.7],
+            [-0.6, 0.85],     // 新疆北部
+            [-0.45, 0.95],
+            [-0.3, 1.05],     // 内蒙古西部
+            // 北部（鸡背）
+            [-0.1, 1.15],
+            [0.1, 1.25],      // 内蒙古中部
+            [0.3, 1.3],
+            [0.5, 1.35],      // 内蒙古东部
+            [0.8, 1.38],
+            [1.0, 1.4]        // 回到起点附近
         ];
 
-        // 创建地图形状
-        const shape = new THREE.Shape();
-        shape.moveTo(chinaOutline[0][0], chinaOutline[0][1]);
-        for (let i = 1; i < chinaOutline.length; i++) {
-            shape.lineTo(chinaOutline[i][0], chinaOutline[i][1]);
+        // 台湾岛轮廓
+        const taiwanOutline = [
+            [0.88, -0.28],
+            [0.92, -0.25],
+            [0.94, -0.22],
+            [0.95, -0.18],
+            [0.94, -0.14],
+            [0.92, -0.11],
+            [0.88, -0.1],
+            [0.85, -0.12],
+            [0.84, -0.15],
+            [0.85, -0.2],
+            [0.86, -0.25]
+        ];
+
+        // 海南岛轮廓
+        const hainanOutline = [
+            [0.42, -0.72],
+            [0.46, -0.7],
+            [0.48, -0.68],
+            [0.49, -0.65],
+            [0.48, -0.62],
+            [0.45, -0.6],
+            [0.42, -0.61],
+            [0.4, -0.64],
+            [0.39, -0.68],
+            [0.4, -0.71]
+        ];
+
+        // 南海诸岛（简化表示）
+        const southSeaIslands = [
+            // 西沙群岛区域
+            [0.35, -0.85],
+            [0.38, -0.83],
+            [0.4, -0.85],
+            [0.38, -0.87],
+            [0.35, -0.86]
+        ];
+
+        // 创建中国大陆形状
+        const mainlandShape = new THREE.Shape();
+        mainlandShape.moveTo(mainlandOutline[0][0], mainlandOutline[0][1]);
+        for (let i = 1; i < mainlandOutline.length; i++) {
+            mainlandShape.lineTo(mainlandOutline[i][0], mainlandOutline[i][1]);
         }
-        shape.closePath();
+        mainlandShape.closePath();
 
-        // 添加一些内部孔洞（简化）
-        const holePath = new THREE.Path();
-        holePath.moveTo(-0.2, 0.3);
-        holePath.lineTo(-0.15, 0.35);
-        holePath.lineTo(-0.1, 0.3);
-        holePath.lineTo(-0.15, 0.25);
-        holePath.closePath();
+        // 添加台湾岛
+        const taiwanShape = new THREE.Shape();
+        taiwanShape.moveTo(taiwanOutline[0][0], taiwanOutline[0][1]);
+        for (let i = 1; i < taiwanOutline.length; i++) {
+            taiwanShape.lineTo(taiwanOutline[i][0], taiwanOutline[i][1]);
+        }
+        taiwanShape.closePath();
 
-        const geometry = new THREE.ExtrudeGeometry(shape, {
+        // 添加海南岛
+        const hainanShape = new THREE.Shape();
+        hainanShape.moveTo(hainanOutline[0][0], hainanOutline[0][1]);
+        for (let i = 1; i < hainanOutline.length; i++) {
+            hainanShape.lineTo(hainanOutline[i][0], hainanOutline[i][1]);
+        }
+        hainanShape.closePath();
+
+        // 添加南海诸岛
+        const southSeaShape = new THREE.Shape();
+        southSeaShape.moveTo(southSeaIslands[0][0], southSeaIslands[0][1]);
+        for (let i = 1; i < southSeaIslands.length; i++) {
+            southSeaShape.lineTo(southSeaIslands[i][0], southSeaIslands[i][1]);
+        }
+        southSeaShape.closePath();
+
+        // 创建几何体
+        const extrudeSettings = {
             depth: 0.15,
             bevelEnabled: true,
             bevelThickness: 0.02,
             bevelSize: 0.02,
             bevelSegments: 3
+        };
+
+        const mainlandGeometry = new THREE.ExtrudeGeometry(mainlandShape, extrudeSettings);
+        const taiwanGeometry = new THREE.ExtrudeGeometry(taiwanShape, extrudeSettings);
+        const hainanGeometry = new THREE.ExtrudeGeometry(hainanShape, extrudeSettings);
+        const southSeaGeometry = new THREE.ExtrudeGeometry(southSeaShape, {
+            ...extrudeSettings,
+            depth: 0.08  // 南海诸岛稍矮一些
         });
 
-        // 计算边界框并居中
-        geometry.computeBoundingBox();
-        const center = new THREE.Vector3();
-        geometry.boundingBox.getCenter(center);
-        geometry.translate(-center.x, -center.y, -center.z);
+        // 计算每个几何体的中心并合并
+        const geometries = [mainlandGeometry, taiwanGeometry, hainanGeometry, southSeaGeometry];
+        
+        // 计算整体边界框
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        geometries.forEach(geo => {
+            geo.computeBoundingBox();
+            minX = Math.min(minX, geo.boundingBox.min.x);
+            maxX = Math.max(maxX, geo.boundingBox.max.x);
+            minY = Math.min(minY, geo.boundingBox.min.y);
+            maxY = Math.max(maxY, geo.boundingBox.max.y);
+        });
 
-        // 调整城市坐标以匹配新的中心
-        CITIES.forEach(city => {
-            city.x -= center.x;
-            city.y -= center.y;
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+
+        // 居中所有几何体
+        geometries.forEach(geo => {
+            geo.translate(-centerX, -centerY, 0);
         });
 
         // 创建材质
@@ -245,24 +379,86 @@ class WeatherMap {
             emissiveIntensity: 0.5
         });
 
-        const mapMesh = new THREE.Mesh(geometry, material);
-        mapMesh.rotation.x = -Math.PI / 6;
-        this.scene.add(mapMesh);
+        // 创建网格
+        const mainlandMesh = new THREE.Mesh(mainlandGeometry, material);
+        const taiwanMesh = new THREE.Mesh(taiwanGeometry, material);
+        const hainanMesh = new THREE.Mesh(hainanGeometry, material);
+        const southSeaMesh = new THREE.Mesh(southSeaGeometry, material);
 
-        // 添加边缘发光效果
-        const edges = new THREE.EdgesGeometry(geometry);
-        const lineMaterial = new THREE.LineBasicMaterial({ 
+        // 组合所有地图部分
+        const mapGroup = new THREE.Group();
+        mapGroup.add(mainlandMesh);
+        mapGroup.add(taiwanMesh);
+        mapGroup.add(hainanMesh);
+        mapGroup.add(southSeaMesh);
+
+        // 添加南海九段线（虚线表示）
+        const dashLinePoints = [
+            // 九段线的大致位置
+            new THREE.Vector3(0.35, -0.75, 0.16),
+            new THREE.Vector3(0.45, -0.75, 0.16),
+            new THREE.Vector3(0.55, -0.75, 0.16),
+            new THREE.Vector3(0.65, -0.7, 0.16),
+            new THREE.Vector3(0.7, -0.6, 0.16),
+            new THREE.Vector3(0.72, -0.5, 0.16),
+            new THREE.Vector3(0.7, -0.4, 0.16),
+            new THREE.Vector3(0.65, -0.35, 0.16),
+            new THREE.Vector3(0.6, -0.3, 0.16)
+        ];
+
+        const lineMaterial = new THREE.LineDashedMaterial({
+            color: 0x00d4ff,
+            linewidth: 1,
+            scale: 1,
+            dashSize: 0.05,
+            gapSize: 0.03,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        const lineGeometry = new THREE.BufferGeometry().setFromPoints(dashLinePoints);
+        const dashLines = new THREE.Line(lineGeometry, lineMaterial);
+        dashLines.computeLineDistances();
+        mapGroup.add(dashLines);
+
+        // 旋转整个地图组
+        mapGroup.rotation.x = -Math.PI / 6;
+        this.scene.add(mapGroup);
+
+        // 添加边缘发光效果（ mainland 轮廓）
+        const edges = new THREE.EdgesGeometry(mainlandGeometry);
+        const lineEdgeMaterial = new THREE.LineBasicMaterial({ 
             color: 0x00d4ff,
             transparent: true,
             opacity: 0.5
         });
-        const wireframe = new THREE.LineSegments(edges, lineMaterial);
-        wireframe.rotation.x = -Math.PI / 6;
-        this.scene.add(wireframe);
+        const wireframe = new THREE.LineSegments(edges, lineEdgeMaterial);
+        
+        // 台湾岛轮廓
+        const taiwanEdges = new THREE.EdgesGeometry(taiwanGeometry);
+        const taiwanWireframe = new THREE.LineSegments(taiwanEdges, lineEdgeMaterial);
+        
+        // 海南岛轮廓
+        const hainanEdges = new THREE.EdgesGeometry(hainanGeometry);
+        const hainanWireframe = new THREE.LineSegments(hainanEdges, lineEdgeMaterial);
+
+        const edgeGroup = new THREE.Group();
+        edgeGroup.add(wireframe);
+        edgeGroup.add(taiwanWireframe);
+        edgeGroup.add(hainanWireframe);
+        edgeGroup.rotation.x = -Math.PI / 6;
+        this.scene.add(edgeGroup);
 
         // 保存引用
-        this.mapMesh = mapMesh;
-        this.mapWireframe = wireframe;
+        this.mapMesh = mapGroup;
+        this.mapWireframe = edgeGroup;
+
+        // 调整城市坐标以匹配新的中心
+        CITIES.forEach(city => {
+            city.x -= centerX;
+            city.y -= centerY;
+        });
+    }
     }
 
     createCityMarkers() {
